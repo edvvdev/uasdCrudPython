@@ -127,39 +127,125 @@ def ejecutar_queries():
                 print("Opción no válida.")
 
 
-def ejecutar_fase1():
-    """Ejecuta todas las operaciones de la Fase I."""
-    print_header("FASE I: CRUD + IMPORT/EXPORT + MÉTRICAS")
+# =====================================================================
+# SUBMENÚ FASE I
+# =====================================================================
 
+def submenu_fase1():
+    """Submenú para operaciones de Fase I."""
     crud = CrudService()
     export = ExportService()
     metrics = MetricsService()
 
-    print_subheader("1. CRUD Operations")
-    crud.crear_pais("Brasil")
-    crud.crear_pais("Brasil")
-    crud.crear_ciudad("Rio de Janeiro", 1)
-    crud.actualizar_tarifa_pelicula(1, 4.99)
-    paises = crud.leer_paises(3)
-    print(f"Países recuperados: {len(paises)}")
-    crud.eliminar_ciudad(1)
+    while True:
+        print_header("FASE I - SUBMENÚ")
+        print()
+        print("  1. CRUD Countries (Create, Read)")
+        print("  2. CRUD Cities (Create, Read, Delete)")
+        print("  3. CRUD Films (Update)")
+        print("  4. Exportar a CSV")
+        print("  5. Exportar a JSON")
+        print("  6. Métricas Descriptivas")
+        print("  A. Ejecutar TODO (completo)")
+        print("  0. Volver al menú principal")
+        print()
 
-    print_subheader("2. Export/Import")
-    export.exportar_a_csv("film", "data/peliculas.csv")
-    export.exportar_a_json("city", "data/ciudades.json")
+        opcion = input("Seleccione una opción: ").strip()
 
-    print_subheader("3. Métricas Descriptivas")
-    metrics.calcular_metricas_descriptivas()
+        if opcion == "0":
+            break
+        elif opcion == "1":
+            print_subheader("CRUD Countries")
+            crud.crear_pais("Argentina")
+            paises = crud.leer_paises(5)
+            print(f"Países recuperados: {len(paises)}")
+        elif opcion == "2":
+            print_subheader("CRUD Cities")
+            crud.crear_ciudad("Buenos Aires", 10)
+            ciudades = crud.leer_ciudades(5)
+            print(f"Ciudades recuperadas: {len(ciudades)}")
+        elif opcion == "3":
+            print_subheader("CRUD Films - Actualizar tarifa")
+            crud.actualizar_tarifa_pelicula(1, 5.99)
+            pelicula = crud.buscar_pelicula_por_id(1)
+            print(f"Película: {pelicula}")
+        elif opcion == "4":
+            print_subheader("Exportar a CSV")
+            export.exportar_a_csv("film", "data/peliculas.csv")
+        elif opcion == "5":
+            print_subheader("Exportar a JSON")
+            export.exportar_a_json("city", "data/ciudades.json")
+        elif opcion == "6":
+            print_subheader("Métricas Descriptivas")
+            metrics.calcular_metricas_descriptivas()
+        elif opcion.upper() == "A":
+            print_subheader("Ejecutando FASE I completa")
+            crud.crear_pais("Uruguay")
+            paises = crud.leer_paises(3)
+            print(f"Países: {len(paises)}")
+            export.exportar_a_csv("film", "data/peliculas.csv")
+            export.exportar_a_json("city", "data/ciudades.json")
+            metrics.calcular_metricas_descriptivas()
+            print("[FASE I] Completada exitosamente")
+        else:
+            print("Opción no válida.")
 
-    print("[FASE I] Completada exitosamente")
 
+# =====================================================================
+# SUBMENÚ FASE II
+# =====================================================================
 
-def ejecutar_fase2():
-    """Ejecuta el flujo ORM completo de la Fase II."""
-    print_header("FASE II: ARQUITECTURA ORM MODULAR")
+def submenu_fase2():
+    """Submenú para operaciones de Fase II."""
     controlador = SakilaWorkflowController()
-    controlador.procesar_flujo_completo()
-    print("[FASE II] Completada exitosamente")
+
+    while True:
+        print_header("FASE II - SUBMENÚ ORM")
+        print()
+        print("  1. Gestionar Countries (Entity)")
+        print("  2. Gestionar Cities (Entity)")
+        print("  3. Gestionar Films (Entity)")
+        print("  4. Ver List<Entity>")
+        print("  5. Ejecutar flujo completo ORM")
+        print("  0. Volver al menú principal")
+        print()
+
+        opcion = input("Seleccione una opción: ").strip()
+
+        if opcion == "0":
+            break
+        elif opcion == "1":
+            print_subheader("Gestionar Country Entity")
+            pais = controlador.crear_pais("Chile")
+            print(f"País creado: {pais}")
+            paises = controlador.obtener_paises(3)
+            print(f"Países en sistema: {len(paises)}")
+        elif opcion == "2":
+            print_subheader("Gestionar City Entity")
+            ciudad = controlador.crear_ciudad("Santiago", 1)
+            print(f"Ciudad creada: {ciudad}")
+        elif opcion == "3":
+            print_subheader("Gestionar Film Entity")
+            pelicula = controlador.obtener_pelicula(1)
+            print(f"Película recuperada: {pelicula}")
+            if pelicula:
+                controlador.actualizar_tarifa(1, 6.99)
+                print("Tarifa actualizada")
+        elif opcion == "4":
+            print_subheader("Ver List<Entity>")
+            paises = controlador.obtener_paises(5)
+            print(f"List<CountryEntity>: {len(paises)} elementos")
+            for p in paises:
+                print(f"  {p}")
+            peliculas = controlador.obtener_peliculas(3)
+            print(f"List<FilmEntity>: {len(peliculas)} elementos")
+            for p in peliculas:
+                print(f"  {p}")
+        elif opcion == "5":
+            print_subheader("Flujo Completo ORM")
+            controlador.procesar_flujo_completo()
+        else:
+            print("Opción no válida.")
 
 
 def mostrar_menu_interactivo():
@@ -168,7 +254,7 @@ def mostrar_menu_interactivo():
         print_header("MENÚ PRINCIPAL - uasdCrudPython")
         print("  Maestría en Ciencia de Datos e Inteligencia Artificial")
         print()
-        print("  1. FASE I: CRUD + Import/Export + Métricas")
+        print(" 1. FASE I: CRUD + Import/Export + Métricas")
         print("  2. FASE II: Arquitectura ORM")
         print("  3. CONSULTAS SQL (10 queries)")
         print("  4. DOCUMENTACIÓN")
@@ -178,9 +264,9 @@ def mostrar_menu_interactivo():
         opcion = input("Seleccione una opción: ").strip()
 
         if opcion == "1":
-            ejecutar_fase1()
+            submenu_fase1()
         elif opcion == "2":
-            ejecutar_fase2()
+            submenu_fase2()
         elif opcion == "3":
             ejecutar_queries()
         elif opcion == "4":
@@ -225,13 +311,13 @@ def main():
     args = parser.parse_args()
 
     if args.all:
-        ejecutar_fase1()
+        submenu_fase1()
         print()
-        ejecutar_fase2()
+        submenu_fase2()
     elif args.fase1:
-        ejecutar_fase1()
+        submenu_fase1()
     elif args.fase2:
-        ejecutar_fase2()
+        submenu_fase2()
     elif args.queries:
         ejecutar_queries()
     else:
