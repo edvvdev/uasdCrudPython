@@ -147,5 +147,4 @@ SELECT title, replacement_cost
 FROM film 
 WHERE replacement_cost = (SELECT MAX(replacement_cost) FROM film);
 
--- Instalacion de python
-pip install mysql-connector-python pandas numpy
+
