@@ -3,26 +3,35 @@
 > Proyecto académico - Maestría en Ciencia de Datos e Inteligencia Artificial
 > Implementación CRUD/ORM nativo en Python con MariaDB (Sakila)
 
+## Cumplimiento de Criterios de Evaluación
+
+| # | Criterio | Puntos | Estado |
+|---|----------|--------|--------|
+| 1 | FASE I: Queries SQL + Python |8 | ✅ |
+| 2 | DbContext + ORM framework | 3 | ✅ |
+| 3 | Entity |3 | ✅ |
+| 4 | Model (list<entity>) | 3 | ✅ |
+| 5 | Controller | 3 | ✅ |
+| 6 | Video explicativo (opcional) | 3 | ❌ |
+
+Ver [docs/criterios.md](docs/criterios.md) para mapeo completo.
+
 ## Estructura del Proyecto
 
 ```
 uasdCrudPython/
 ├── requirements.txt       # Dependencias Python
-├── .gitignore
 ├── README.md
 ├── src/
-│   ├── __init__.py
-│   ├── dbcontext.py       # Gestor de conexiones y transacciones
+│   ├── dbcontext.py       # DbContext (gestor de conexiones)
 │   ├── fase1_main.py      # Fase I: CRUD + Import/Export + Métricas
 │   ├── fase2_orm.py       # Fase II: Punto de entrada ORM
 │   ├── entities/
-│   │   ├── __init__.py    # CountryEntity, CityEntity, FilmEntity, InventoryEntity
+│   │   └── __init__.py    # CountryEntity, CityEntity, FilmEntity
 │   ├── models/
-│   │   ├── __init__.py
-│   │   └── data_repository.py  # List<Entity> y operaciones de negocio
+│   │   └── data_repository.py  # List<Entity>
 │   └── controllers/
-│       ├── __init__.py
-│       └── sakila_controller.py  # Orquestador de flujo de negocio
+│       └── sakila_controller.py # SakilaWorkflowController
 ├── sql/
 │   ├── 00_init.sql        # CREATE DATABASE
 │   ├── run_all.sql        # Script maestro
@@ -33,31 +42,13 @@ uasdCrudPython/
 │   └── queries/
 │       └── 03_queries.sql # 10 consultas analíticas
 ├── docs/
-│   ├── README.md          # Guía de uso
+│   ├── README.md          # Este documento
 │   ├── DESIGN.md          # Diseño técnico
-│   └── ensayo.md          # Ensayo académico
+│   ├── criterios.md       # Mapeo de criterios de evaluación
+│   ├── ensayo/
+│   │   └── ensayo.md # Ensayo académico
+│   └── evidencias/       # Screenshots de corrida
 └── data/                  # Exports CSV/JSON
-```
-
-## Arquitectura ORM Modular
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    SakilaWorkflowController                │
-│              (Orquesta flujo de negocio)                  │
-├─────────────────────────────────────────────────────────────┤
-│                     DataRepository                         │
-│              (List<Entity> - Abstracción) │
-├─────────────────────────────────────────────────────────────┤
-│                      DbContext                             │
-│         (Gestión de conexiones y transacciones)            │
-├─────────────────────────────────────────────────────────────┤
-│ mysql-connector-python                   │
-│                    (Driver nativo) │
-├─────────────────────────────────────────────────────────────┤
-│ MariaDB                              │
-│ (Sakila)                              │
-└─────────────────────────────────────────────────────────────┘
 ```
 
 ## Quick Start
@@ -76,14 +67,26 @@ python src/fase1_main.py
 python src/fase2_orm.py
 ```
 
-## Componentes ORM
+## Arquitectura ORM Modular
 
-| Componente | Archivo | Descripción |
-|------------|---------|-------------|
-| **DbContext** | `src/dbcontext.py` | Gestiona ciclo de vida de conexiones y transacciones |
-| **Entities** | `src/entities/__init__.py` | CountryEntity, CityEntity, FilmEntity, InventoryEntity |
-| **Models** | `src/models/data_repository.py` | List<Entity> e hidratación de datos |
-| **Controllers** | `src/controllers/sakila_controller.py` | Orquesta flujo de negocio |
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    SakilaWorkflowController                │
+│              (Orquesta flujo de negocio) [2 pts]         │
+├─────────────────────────────────────────────────────────────┤
+│                     DataRepository                         │
+│              (List<Entity> - Abstracción)  [1 pt]         │
+├─────────────────────────────────────────────────────────────┤
+│                      DbContext                             │
+│         (Gestión de conexiones y transacciones)  [1 pt]   │
+├─────────────────────────────────────────────────────────────┤
+│               mysql-connector-python                       │
+│                    (Driver nativo)                        │
+├─────────────────────────────────────────────────────────────┤
+│                      MariaDB                               │
+│                      (Sakila)                              │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## Documentación
 
@@ -91,7 +94,8 @@ python src/fase2_orm.py
 |-----------|-------------|
 | [docs/README.md](docs/README.md) | Guía de uso completa |
 | [docs/DESIGN.md](docs/DESIGN.md) | Arquitectura y decisiones técnicas |
-| [docs/ensayo.md](docs/ensayo.md) | Ensayo académico |
+| [docs/criterios.md](docs/criterios.md) | Mapeo de criterios de evaluación |
+| [docs/ensayo/ensayo.md](docs/ensayo/ensayo.md) | Ensayo académico |
 | [sql/README.md](sql/README.md) | Documentación SQL |
 
 ## Repositorio

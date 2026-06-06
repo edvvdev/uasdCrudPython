@@ -23,7 +23,7 @@
 uasdCrudPython/
 ├── requirements.txt       # Dependencias Python
 ├── src/
-│   ├── dbcontext.py       # Gestor de conexiones
+│   ├── dbcontext.py       # DbContext (gestor de conexiones)
 │   ├── fase1_main.py      # CRUD + Import/Export + Métricas
 │   ├── fase2_orm.py       # Punto de entrada ORM
 │   ├── entities/
@@ -31,7 +31,7 @@ uasdCrudPython/
 │   ├── models/
 │   │   └── data_repository.py  # List<Entity>
 │   └── controllers/
-│       └── sakila_controller.py  # Flujo de negocio
+│       └── sakila_controller.py  # SakilaWorkflowController
 ├── sql/
 │   ├── 00_init.sql        # CREATE DATABASE
 │   ├── run_all.sql        # Script maestro
@@ -44,7 +44,10 @@ uasdCrudPython/
 ├── docs/
 │   ├── README.md
 │   ├── DESIGN.md
-│   └── ensayo.md
+│   ├── criterios.md       # Mapeo de criterios de evaluación
+│   ├── ensayo/
+│   │   └── ensayo.md
+│   └── evidencias/
 └── data/                   # Exports CSV/JSON
 ```
 

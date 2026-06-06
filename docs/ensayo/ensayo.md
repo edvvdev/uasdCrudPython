@@ -518,10 +518,13 @@ uasdCrudPython/
 │   └── queries/
 │       └── 03_queries.sql # 10 consultas analíticas
 ├── docs/
-│   ├── README.md          # Documentación de uso
+│   ├── README.md          # Guía de uso
 │   ├── DESIGN.md          # Diseño técnico
-│   └── ensayo.md          # Este documento
-└── data/                  # Carpeta para exports CSV/JSON
+│   ├── criterios.md       # Mapeo de criterios de evaluación
+│   ├── ensayo/
+│   │   └── ensayo.md      # Este documento
+│   └── evidencias/        # Screenshots de corrida
+└── data/                  # Exports CSV/JSON
 ```
 
 ### Anexo B: Datos de Prueba Cargados
