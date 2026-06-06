@@ -17,6 +17,22 @@
 
 ## Arquitectura
 
+### Estructura del Proyecto
+
+```
+uasdCrudPython/
+├── Fase1.sql              # DDL, DML y 10 consultas SQL
+├── requirements.txt       # Dependencias Python
+├── src/
+│   ├── fase1_main.py      # CRUD + Import/Export + Métricas
+│   └── fase2_orm.py       # ORM POO (DbContext, Entity, Model, Controller)
+├── docs/
+│   ├── README.md
+│   ├── DESIGN.md
+│   └── ensayo.md
+└── data/                   # Exports CSV/JSON
+```
+
 ### Capas del Sistema
 
 ```
