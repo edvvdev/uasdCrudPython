@@ -3,9 +3,10 @@
 # =====================================================================
 # Funciones reutilizables para formateo, validación y manejo de errores.
 
+import os
+import sys
 from functools import wraps
 from typing import Optional, Callable, Any
-import sys
 
 
 def handle_errors(func: Callable) -> Callable:
@@ -42,4 +43,6 @@ def clear_screen() -> None:
     os.system("cls" if os.name == "nt" else "clear")
 
 
-import os
+def pausa():
+    """Pausa la ejecución hasta que el usuario presione Enter."""
+    input("\nPresione Enter para continuar...")
