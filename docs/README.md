@@ -1,4 +1,4 @@
-# uasdCrudPython
+# uasdCrudPython - Documentación de Uso
 
 > Proyecto académico para la Maestría en Ciencia de Datos e Inteligencia Artificial. Implementación de CRUD/ORM nativo en Python con MariaDB (Sakila).
 
@@ -10,116 +10,121 @@ Este proyecto demuestra una implementación de arquitectura ORM nativa en Python
 
 ```
 uasdCrudPython/
+├── main.py                  # Punto de entrada unificado (CLI + menú)
+├── setup.py                # Paquete instalable
 ├── requirements.txt       # Dependencias Python
-├── README.md
+├── .env                    # Configuración local
 ├── src/
-│   ├── fase1_main.py      # CRUD + Import/Export + Métricas (Fase I)
-│   └── fase2_orm.py       # ORM POO (Fase II)
+│   ├── config.py           # Configuración centralizada
+│   ├── main.py            # Orchestrator + CLI
+│   ├── dbcontext.py       # Gestor de conexiones
+│   ├── fase1/
+│   │   ├── crud_service.py    # CRUD operations
+│   │   ├── export_service.py  # CSV/JSON I/O
+│   │   └── metrics_service.py # Métricas descriptivas
+│   ├── fase2/
+│   │   ├── entities/
+│   │   ├── models/
+│   │   └── controllers/
+│   └── utils/
+│       └── helpers.py
 ├── sql/
-│   ├── 00_init.sql        # CREATE DATABASE
-│   ├── 01_ddl.sql         # CREATE TABLE + Constraints
-│   ├── 02_dml.sql         # INSERT datos
-│   ├── 03_queries.sql     # 10 consultas analíticas
-│   └── run_all.sql         # Script maestro
+│   ├── ddl/
+│   ├── dml/
+│   └── queries/
 ├── docs/
 │   ├── README.md           # Este documento
-│   ├── DESIGN.md           # Diseño técnico
-│   └── ensayo.md           # Ensayo académico
+│   ├── DESIGN.md          # Diseño técnico
+│   ├── criterios.md       # Mapeo de criterios de evaluación
+│   ├── ensayo/
+│   │   └── ensayo.md      # Ensayo académico
+│   └── evidencias/
 └── data/                   # Exports CSV/JSON
+```
+
+## Instalación
+
+```bash
+# Clonar repositorio
+git clone https://github.com/edvvdev/uasdCrudPython.git
+cd uasdCrudPython
+
+# Crear entorno virtual (recomendado)
+python -m venv venv
+source venv/bin/activate
+
+# Instalar dependencias
+pip install -r requirements.txt
+
+# Instalar como paquete (desarrollo)
+pip install -e .
+```
+
+## Uso
+
+### Punto de Entrada Unificado
+
+```bash
+# Menú interactivo
+python src/main.py
+
+# CLI flags
+python src/main.py --fase1      # Ejecutar Fase I
+python src/main.py --fase2      # Ejecutar Fase II
+python src/main.py --queries    # Mostrar consultas SQL
+python src/main.py --all        # Ejecutar todo
+```
+
+### Ejecución Individual por Servicio
+
+```python
+from src.fase1 import CrudService, ExportService, MetricsService
+
+# CRUD
+crud = CrudService()
+crud.crear_pais("Brasil")
+paises = crud.leer_paises(5)
+
+# Export
+export = ExportService()
+export.exportar_a_csv("film", "data/peliculas.csv")
+
+# Métricas
+metrics = MetricsService()
+metrics.calcular_metricas_descriptivas()
 ```
 
 ## Características Implementadas
 
-### Fase I: Operaciones Básicas (CRUD + Import/Export + Métricas)
+### Fase I: Operaciones Básicas
 
-| Componente | Descripción | Función/Archivo |
-|------------|-------------|-----------------|
-| **CRUD Countries** | Create, Read, Update, Delete para países | `crud_crear_pais()`, `crud_leer_paises()` |
-| **CRUD Cities** | Create, Read para ciudades vinculadas | `crud_crear_ciudad()`, `crud_eliminar_ciudad()` |
-| **CRUD Films** | Update para tarifas de películas | `crud_actualizar_tarifa_pelicula()` |
-| **Import/Export CSV** | Exporta tablas a archivos CSV | `exportar_a_csv(tabla, ruta)` |
-| **Import/Export JSON** | Exporta tablas a archivos JSON | `exportar_a_json(tabla, ruta)` |
-| **Métricas Descriptivas** | Media, Rango, Desviación, Varianza, Covarianza | `calcular_metricas_descriptivas()` |
+| Componente | Descripción | Servicio |
+|------------|-------------|----------|
+| **CRUD Countries** | Create, Read para países | `CrudService` |
+| **CRUD Cities** | Create, Read, Delete para ciudades | `CrudService` |
+| **CRUD Films** | Read, Update para películas | `CrudService` |
+| **Import/Export CSV** | Exportar/importar tablas a CSV | `ExportService` |
+| **Import/Export JSON** | Exportar/importar tablas a JSON | `ExportService` |
+| **Métricas Descriptivas** | Media, Rango, Desviación, Varianza, Covarianza | `MetricsService` |
 
 ### Fase II: Arquitectura ORM
 
 | Componente | Descripción |
 |------------|-------------|
 | **DbContext** | Gestor de conexiones y transacciones con MySQL |
-| **Entity Objects** | CountryEntity, CityEntity, FilmEntity (mapeo 1:1 con tablas) |
+| **Entity Objects** | CountryEntity, CityEntity, FilmEntity, InventoryEntity |
 | **Model Layer** | DataRepository con List<Entity> para hidratación de datos |
 | **Controller** | SakilaWorkflowController para orquestar el flujo de negocio |
 
-## Requisitos
-
-- Python 3.8+
-- MariaDB/MySQL
-- Dependencias:
-  ```bash
-  pip install -r requirements.txt
-  ```
-
-## Uso
-
-### 1. Importar Base de Datos
-
-```bash
-mysql -u root < sql/run_all.sql
-```
-
-O individualmente:
-```bash
-mysql -u root < sql/00_init.sql
-mysql -u root < sql/01_ddl.sql
-mysql -u root < sql/02_dml.sql
-```
-
-### 2. Ejecutar Fase I
-
-```bash
-python src/fase1_main.py
-```
-
-**Operaciones ejecutadas:**
-1. Crear país (con validación de duplicados via Unique Constraint)
-2. Crear ciudad vinculada a país
-3. Actualizar tarifa de película
-4. Leer últimos países
-5. Eliminar ciudad (validando FK)
-6. Exportar tabla Film a CSV
-7. Exportar tabla City a JSON
-8. Calcular métricas descriptivas (media, rango, desviación, varianza, covarianza)
-
-### 3. Ejecutar Fase II
-
-```bash
-python src/fase2_orm.py
-```
-
-**Flujo ORM:**
-1. Crear entidad Country en memoria
-2. Persistir entidad via DbContext
-3. Forzar duplicado para auditar Unique Constraint
-4. Hidratar List<CountryEntity> desde repositorio
-5. Crear entidad City vinculada a Country
-6. Modificar estado de FilmEntity y sincronizar con BD
-7. Eliminar entidad via capa intermedia
-
 ## API Reference
 
-### Funciones - Fase I
+### Servicios - Fase I
 
-| Función | Descripción |
-|---------|-------------|
-| `obtener_conexion()` | Establece conexión segura con MySQL |
-| `crud_crear_pais(nombre_pais)` | Inserta país nuevo |
-| `crud_leer_paises(limite)` | Lee últimos N países |
-| `crud_crear_ciudad(nombre_ciudad, id_pais)` | Inserta ciudad vinculada |
-| `crud_actualizar_tarifa_pelicula(id_pelicula, nueva_tarifa)` | Actualiza rental_rate |
-| `crud_eliminar_ciudad(id_ciudad)` | Elimina ciudad por ID |
-| `exportar_a_csv(nombre_tabla, ruta_destino)` | Exporta tabla a CSV |
-| `exportar_a_json(nombre_tabla, ruta_destino)` | Exporta tabla a JSON |
-| `calcular_metricas_descriptivas()` | Calcula media, rango, desviación, varianza, covarianza |
+| Servicio | Descripción |
+|----------|-------------|
+| `CrudService` | Operaciones CRUD para Country, City, Film |
+| `ExportService` | Import/Export CSV y JSON |
+| `MetricsService` | Métricas descriptivas (media, rango, desviación, varianza, covarianza) |
 
 ### Clases - Fase II (ORM)
 
@@ -129,48 +134,40 @@ python src/fase2_orm.py
 | `CountryEntity` | Mapeo de tabla country |
 | `CityEntity` | Mapeo de tabla city |
 | `FilmEntity` | Mapeo de tabla film |
+| `InventoryEntity` | Mapeo de tabla inventory |
 | `DataRepository` | Abstrae DbContext, convierte filas en List<Entity> |
 | `SakilaWorkflowController` | Orquesta flujo de negocio |
 
-## Integridad de Datos (Unique Constraints)
+## Integridad de Datos
 
-### Constraints Implementados en SQL (`sql/01_ddl.sql`)
+### Constraints Implementados
 
-| Tabla | Constraint | Columnas | Propósito |
-|-------|------------|----------|-----------|
-| country | unique_country | country | Evitar países duplicados por nombre |
-| city | unique_city_country | city, country_id | Evitar ciudad duplicada en mismo país |
-| film | unique_title_release | title, release_year | Evitar título duplicado en mismo año |
+| Tabla | Constraint | Propósito |
+|-------|------------|-----------|
+| country | unique_country | Nombre de país único |
+| city | unique_city_country | Ciudad única por país (composite) |
+| film | unique_title_release | Título único por año de lanzamiento |
 
 ### Foreign Keys con Comportamiento Restrictivo
 
-| Tabla | Foreign Key | Referencias | Comportamiento |
-|-------|-------------|-------------|----------------|
-| city | fk_city_country | country(country_id) | ON DELETE RESTRICT, ON UPDATE CASCADE |
-| inventory | fk_inventory_film | film(film_id) | ON DELETE RESTRICT, ON UPDATE CASCADE |
+| Tabla | Foreign Key | Comportamiento |
+|-------|-------------|----------------|
+| city | fk_city_country | ON DELETE RESTRICT |
+| inventory | fk_inventory_film | ON DELETE RESTRICT |
 
-## Consultas SQL Analíticas (`sql/03_queries.sql`)
+## Consultas SQL Analíticas
 
-1. **Películas con costo de reemplazo > $15.00**
-2. **Join ciudades con países** (INNER JOIN)
-3. **Conteo de ciudades por país** (GROUP BY con LEFT JOIN)
-4. **Duración promedio por clasificación** (AVG, GROUP BY)
-5. **Búsqueda por patrón en títulos** (LIKE '%...%')
-6. **Inventario activo por tienda** (JOIN con фильтро по store_id)
-7. **Películas con tarifa 3-6 y duración > 120** (BETWEEN, AND)
-8. **Conteo de copias por título** (COUNT, LEFT JOIN)
-9. **Países sin ciudades asociadas** (LEFT JOIN WHERE NULL)
-10. **Película con máximo costo operativo** (Subconsulta MAX)
-
-## Métricas Descriptivas Implementadas
-
-| Métrica | Descripción | Función |
-|---------|-------------|---------|
-| **Media** | Promedio aritmético de length y replacement_cost | `np.mean()` |
-| **Rango** | Diferencia entre max y min | `np.ptp()` |
-| **Desviación Estándar** | Std muestral (ddof=1) | `np.std(ddof=1)` |
-| **Varianza** | Varianza muestral (ddof=1) | `np.var(ddof=1)` |
-| **Covarianza** | Matriz de covarianza bivariada | `np.cov(ddof=1)` |
+10 consultas implementadas en `sql/queries/03_queries.sql`:
+1. Películas con costo de reemplazo > $15.00
+2. Join ciudades con países
+3. Conteo de ciudades por país
+4. Duración promedio por clasificación
+5. Búsqueda por patrón en títulos
+6. Inventario activo por tienda
+7. Películas con tarifa 3-6 y duración > 120
+8. Conteo de copias por título
+9. Países sin ciudades asociadas
+10. Película con máximo costo operativo
 
 ## Autores
 
@@ -178,8 +175,8 @@ python src/fase2_orm.py
 - Edwing Perez
 - Jharol Duran
 
-**Universidad**: Universidad Autónoma de Santo Domingo (UASD)  
-**Curso**: INF-8237-C2: Ciencias de Datos 1  
+**Universidad**: Universidad Autónoma de Santo Domingo (UASD)
+**Curso**: INF-8237-C2: Ciencias de Datos 1
 **Profesora**: Silveria del Orbe Abad
 
 ## Repositorio

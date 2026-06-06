@@ -6,7 +6,7 @@ Este documento mapea cada criterio de evaluación con su implementación y ubica
 
 | # | Componente | Puntos | Estado | Ubicación | Evidencia |
 |---|------------|--------|--------|-----------|-----------|
-| 1 | FASE I: Queries SQL y Python |8 | ✅ | `sql/queries/03_queries.sql`, `src/fase1_main.py` | Scripts y código |
+| 1 | FASE I: Queries SQL y Python | 8 | ✅ | `sql/queries/`, `src/fase1/` | Scripts y código |
 | 2 | FASE II: DbContext + ORM framework | 3 | ✅ | `src/dbcontext.py` | mysql-connector-python |
 | 3 | FASE II: Entity | 3 | ✅ | `src/entities/__init__.py` | 4 entidades implementadas |
 | 4 | FASE II: Model (list<entity>) | 3 | ✅ | `src/models/data_repository.py` | DataRepository con List<T> |
@@ -30,15 +30,19 @@ Este documento mapea cada criterio de evaluación con su implementación y ubica
 9. Países sin ciudades (LEFT JOIN WHERE NULL)
 10. Máximo costo operativo (subconsulta)
 
-### Queries desde Python (`src/fase1_main.py`)
-- `crud_crear_pais()` - INSERT país
-- `crud_leer_paises()` - SELECT países
-- `crud_crear_ciudad()` - INSERT ciudad
-- `crud_actualizar_tarifa_pelicula()` - UPDATE película
-- `crud_eliminar_ciudad()` - DELETE ciudad
-- `exportar_a_csv()` - Exportar a CSV
-- `exportar_a_json()` - Exportar a JSON
-- `calcular_metricas_descriptivas()` - Media, rango, desviación, varianza, covarianza
+### Queries desde Python (`src/fase1/`)
+
+| Servicio | Métodos |
+|----------|---------|
+| `CrudService` | `crear_pais()`, `leer_paises()`, `crear_ciudad()`, `leer_ciudades()`, `actualizar_tarifa_pelicula()`, `eliminar_ciudad()` |
+| `ExportService` | `exportar_a_csv()`, `exportar_a_json()`, `importar_des_csv()`, `importar_des_json()` |
+| `MetricsService` | `calcular_metricas_descriptivas()`, `calcular_covarianza()` |
+
+**Ejecución:**
+```bash
+pip install -e .
+python src/main.py --fase1
+```
 
 ---
 
@@ -55,12 +59,12 @@ Este documento mapea cada criterio de evaluación con su implementación y ubica
 
 ```python
 class DbContext:
-    def _conectar(self):
-        return mysql.connector.connect(
-            host=self.host, port=self.port,
-            user=self.user, password=self.password,
-            database=self.database
-        )
+    def __init__(self):
+        self.host = Config.HOST
+        self.port = Config.PORT
+        self.user = Config.USER
+        self.password = Config.PASSWORD
+        self.database = Config.DATABASE
 ```
 
 ---
@@ -129,10 +133,15 @@ class SakilaWorkflowController:
         pais = CountryEntity(country_id=None, country="Portugal")
         self.repository.guardar_pais(pais)
         # 2. Forzar duplicado (auditar constraint)
-        #3. Hidratar List<CountryEntity>
+        # 3. Hidratar List<CountryEntity>
         # 4. Crear ciudad vinculada
         # 5. Modificar FilmEntity y sincronizar
         # 6. Eliminar via capa intermedia
+```
+
+**Ejecución:**
+```bash
+python src/main.py --fase2
 ```
 
 ---
@@ -152,16 +161,13 @@ class SakilaWorkflowController:
 
 ## Evidencias de Ejecución
 
-Las evidencias (screenshots) de la corrida de los scripts se almacenan en:
-`docs/evidencias/`
-
-Para capturar evidencias:
 ```bash
-# Fase I
-python src/fase1_main.py > docs/evidencias/fase1_output.txt
+# Instalar paquete
+pip install -e .
 
-# Fase II
-python src/fase2_orm.py > docs/evidencias/fase2_output.txt
+# Generar evidencias
+python src/main.py --fase1 > docs/evidencias/fase1_output.txt
+python src/main.py --fase2 > docs/evidencias/fase2_output.txt
 ```
 
 ---
@@ -170,28 +176,31 @@ python src/fase2_orm.py > docs/evidencias/fase2_output.txt
 
 ```
 uasdCrudPython/
+├── main.py                  # Punto de entrada unificado
+├── setup.py                # Paquete instalable
 ├── requirements.txt
-├── README.md
+├── .env                    # Configuración local
 ├── src/
-│   ├── dbcontext.py           # DbContext (1 punto)
-│   ├── fase1_main.py          # CRUD + Import/Export + Métricas
-│   ├── fase2_orm.py           # Punto de entrada ORM
-│   ├── entities/
-│   │   └── __init__.py       # Entities (1 punto)
-│   ├── models/
-│   │   └── data_repository.py # Model List<Entity> (1 punto)
-│   └── controllers/
-│       └── sakila_controller.py # Controller (2 puntos)
+│   ├── config.py           # Configuración centralizada
+│   ├── main.py            # Orchestrator + CLI
+│   ├── dbcontext.py       # DbContext (1 punto)
+│   ├── fase1/
+│   │   ├── crud_service.py    # CRUD operations
+│   │   ├── export_service.py  # CSV/JSON I/O
+│   │   └── metrics_service.py # Métricas descriptivas
+│   ├── fase2/
+│   │   ├── entities/ # Entities (1 punto)
+│   │   ├── models/         # Model List<Entity> (1 punto)
+│   │   └── controllers/    # Controller (2 puntos)
+│   └── utils/
+│       └── helpers.py
 ├── sql/
-│   ├── ddl/01_ddl.sql        # Constraints
-│   ├── dml/02_dml.sql        # Datos
-│   └── queries/03_queries.sql # 10 consultas
+│   ├── ddl/
+│   ├── dml/
+│   └── queries/
 ├── docs/
-│   ├── README.md
-│   ├── DESIGN.md
+│   ├── criterios.md
 │   ├── ensayo/
-│   │   └── ensayo.md         # Ensayo académico
-│   ├── criterios.md         # Este documento
-│   └── evidencias/          # Screenshots de corrida
-└── data/                     # Exports CSV/JSON
+│   └── evidencias/
+└── data/
 ```

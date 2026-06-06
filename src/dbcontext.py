@@ -7,6 +7,7 @@
 import mysql.connector
 from mysql.connector import Error
 from typing import List, Optional, Tuple
+from src.config import Config
 
 
 class DbContext:
@@ -17,11 +18,11 @@ class DbContext:
     """
 
     def __init__(self):
-        self.host: str = "localhost"
-        self.port: int = 3306
-        self.user: str = "root"
-        self.password: str = "0000"
-        self.database: str = "sakila"
+        self.host: str = Config.HOST
+        self.port: int = Config.PORT
+        self.user: str = Config.USER
+        self.password: str = Config.PASSWORD
+        self.database: str = Config.DATABASE
 
     def _conectar(self):
         """Método privado para instanciar la conexión cruda del Driver."""

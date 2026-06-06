@@ -497,33 +497,33 @@ El enfoque artesanal permite comprender los fundamentos internos de cómo operan
 
 ```
 uasdCrudPython/
+├── main.py                  # Punto de entrada unificado
+├── setup.py                # Paquete instalable
 ├── requirements.txt       # Dependencias Python
+├── .env                    # Configuración local
 ├── src/
+│   ├── config.py           # Configuración centralizada
+│   ├── main.py            # Orchestrator + CLI
 │   ├── dbcontext.py       # DbContext (gestor de conexiones)
-│   ├── fase1_main.py      # Fase I: CRUD + Import/Export + Métricas
-│   ├── fase2_orm.py       # Fase II: Punto de entrada ORM
-│   ├── entities/
-│   │   └── __init__.py    # CountryEntity, CityEntity, FilmEntity
-│   ├── models/
-│   │   └── data_repository.py  # List<Entity>
-│   └── controllers/
-│       └── sakila_controller.py # SakilaWorkflowController
+│   ├── fase1/
+│   │   ├── crud_service.py    # CRUD operations
+│   │   ├── export_service.py  # CSV/JSON I/O
+│   │   └── metrics_service.py # Métricas descriptivas
+│   ├── fase2/
+│   │   ├── entities/
+│   │   ├── models/
+│   │   └── controllers/
+│   └── utils/
+│       └── helpers.py
 ├── sql/
-│   ├── 00_init.sql        # CREATE DATABASE sakila
-│   ├── run_all.sql        # Script maestro
 │   ├── ddl/
-│   │   └── 01_ddl.sql     # CREATE TABLE + Constraints
 │   ├── dml/
-│   │   └── 02_dml.sql     # INSERT datos de prueba
 │   └── queries/
-│       └── 03_queries.sql # 10 consultas analíticas
 ├── docs/
-│   ├── README.md          # Guía de uso
-│   ├── DESIGN.md          # Diseño técnico
-│   ├── criterios.md       # Mapeo de criterios de evaluación
+│   ├── criterios.md       # Mapeo de criterios
 │   ├── ensayo/
 │   │   └── ensayo.md      # Este documento
-│   └── evidencias/        # Screenshots de corrida
+│   └── evidencias/
 └── data/                  # Exports CSV/JSON
 ```
 
