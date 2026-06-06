@@ -1,12 +1,15 @@
 # Ensayo Técnico: CRUD/ORM Nativo en Python con Arquitectura MariaDB-Sakila
 
 **Maestría en Ciencia de Datos e Inteligencia Artificial**
+**INF-8237-C2: Ciencias de Datos 1**
 
 **Autores**:
-- Nombre del Integrante 1
-- Nombre del Integrante 2
-- Nombre del Integrante 3
+- Framiel Trinidad
+- Edwing Perez
+- Jharol Duran
 
+**Universidad**: Universidad Autónoma de Santo Domingo (UASD)
+**Profesora**: Silveria del Orbe Abad
 **Fecha**: 5 de junio de 2026
 
 ---
@@ -494,12 +497,16 @@ El enfoque artesanal permite comprender los fundamentos internos de cómo operan
 
 ```
 uasdCrudPython/
-├── Fase1.sql           # DDL, DML, Constraints y Consultas
-├── fase1_main.py       # Fase I: CRUD + Import/Export + Métricas
-├── fase2_orm.py        # Fase II: ORM completo (DbContext, Entity, Model, Controller)
-├── README.md           # Documentación de uso
-├── DESIGN.md           # Diseño técnico
-└── ensayo.md           # Este documento
+├── Fase1.sql           # DDL, DML, Constraints y 10 Consultas SQL
+├── requirements.txt    # Dependencias Python
+├── src/
+│   ├── fase1_main.py   # Fase I: CRUD + Import/Export + Métricas
+│   └── fase2_orm.py    # Fase II: ORM completo (DbContext, Entity, Model, Controller)
+├── docs/
+│   ├── README.md       # Documentación de uso
+│   ├── DESIGN.md       # Diseño técnico
+│   └── ensayo.md       # Este documento
+└── data/               # Carpeta para exports CSV/JSON
 ```
 
 ### Anexo B: Datos de Prueba Cargados
