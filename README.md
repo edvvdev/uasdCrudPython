@@ -7,17 +7,24 @@
 
 ```
 uasdCrudPython/
-├── Fase1.sql           # DDL, DML, Constraints y 10 Consultas SQL
-├── requirements.txt    # Dependencias Python
+├── requirements.txt       # Dependencias Python
 ├── .gitignore
+├── README.md
 ├── src/
-│   ├── fase1_main.py   # Fase I: CRUD + Import/Export + Métricas
-│   └── fase2_orm.py    # Fase II: ORM (DbContext, Entity, Model, Controller)
+│   ├── fase1_main.py      # Fase I: CRUD + Import/Export + Métricas
+│   └── fase2_orm.py       # Fase II: ORM (DbContext, Entity, Model, Controller)
+├── sql/
+│   ├── README.md          # Documentación SQL
+│   ├── 00_init.sql        # CREATE DATABASE
+│   ├── 01_ddl.sql         # CREATE TABLE + Constraints
+│   ├── 02_dml.sql         # INSERT datos
+│   ├── 03_queries.sql     # 10 consultas analíticas
+│   └── run_all.sql        # Script maestro
 ├── docs/
-│   ├── README.md       # Documentación de uso
-│   ├── DESIGN.md       # Diseño técnico
-│   └── ensayo.md        # Ensayo académico completo
-└── data/               # Carpeta para exports CSV/JSON
+│   ├── README.md          # Guía de uso
+│   ├── DESIGN.md          # Diseño técnico
+│   └── ensayo.md          # Ensayo académico
+└── data/                  # Exports CSV/JSON
 ```
 
 ## Quick Start
@@ -26,8 +33,8 @@ uasdCrudPython/
 # 1. Instalar dependencias
 pip install -r requirements.txt
 
-# 2. Importar base de datos
-mysql -u root < Fase1.sql
+# 2. Importar base de datos (script maestro)
+mysql -u root < sql/run_all.sql
 
 # 3. Ejecutar Fase I
 python src/fase1_main.py
@@ -43,6 +50,7 @@ python src/fase2_orm.py
 | [docs/README.md](docs/README.md) | Guía de uso, API reference, configuración |
 | [docs/DESIGN.md](docs/DESIGN.md) | Arquitectura, decisiones técnicas, limitaciones |
 | [docs/ensayo.md](docs/ensayo.md) | Ensayo académico con todos los criterios de evaluación |
+| [sql/README.md](sql/README.md) | Documentación de scripts SQL |
 
 ## Tecnologías
 
