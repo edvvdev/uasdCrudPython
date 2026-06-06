@@ -38,9 +38,9 @@ class SakilaWorkflowController:
         """Obtiene lista de países ordenados por ID."""
         return self.repository.listar_paises(limite)
 
-    def obtener_ciudades(self, limite: int = 10) -> List[CityEntity]:
-        """Obtiene lista de ciudades ordenadas por ID."""
-        return self.repository.listar_ciudades(limite)
+    def obtener_ciudades(self, limite: int = 10) -> List[tuple]:
+        """Obtiene lista de ciudades con nombre del país."""
+        return self.repository.listar_ciudades_con_pais(limite)
 
     def obtener_pelicula(self, film_id: int) -> FilmEntity:
         """Obtiene una película por su ID."""

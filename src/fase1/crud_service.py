@@ -41,11 +41,14 @@ class CrudService:
             return entity
         return None
 
-    def leer_ciudades(self, limite: int = 10) -> List[CityEntity]:
-        """Retorna lista de ciudades ordenadas por ID descendente."""
-        query = "SELECT city_id, city, country_id, last_update FROM city ORDER BY city_id DESC LIMIT %s"
+    def leer_ciudades(self, limite: int = 10) -> List[tuple]:
+        """Retorna lista de ciudades con nombre del país (JOIN)."""
+        query = """SELECT c.city_id, c.city, c.country_id, co.country, c.last_update
+                   FROM city c
+                   INNER JOIN country co ON c.country_id = co.country_id
+                   ORDER BY c.city_id DESC LIMIT %s"""
         filas = self.context.ejecutar_consulta(query, (limite,))
-        return [CityEntity(city_id=f[0], city=f[1], country_id=f[2], last_update=str(f[3])) for f in filas]
+        return filas
 
     def actualizar_tarifa_pelicula(self, film_id: int, nueva_tarifa: float) -> bool:
         """Actualiza la tarifa de alquiler de una película."""

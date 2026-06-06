@@ -76,6 +76,15 @@ class DataRepository:
             ))
         return lista_modelos
 
+    def listar_ciudades_con_pais(self, limite: int = 10) -> List[tuple]:
+        """Retorna ciudades con nombre del país (JOIN)."""
+        query = """SELECT c.city_id, c.city, c.country_id, co.country, c.last_update
+                   FROM city c
+                   INNER JOIN country co ON c.country_id = co.country_id
+                   ORDER BY c.city_id DESC LIMIT %s"""
+        filas = self.context.ejecutar_consulta(query, (limite,))
+        return filas
+
     def eliminar_ciudad_por_id(self, id_ciudad: int) -> bool:
         """Elimina una ciudad por su ID."""
         query = "DELETE FROM city WHERE city_id = %s"

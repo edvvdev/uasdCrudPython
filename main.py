@@ -201,7 +201,7 @@ def submenu_fase1():
             ciudades = crud.leer_ciudades(limite)
             print(f"  Ciudades recuperadas: {len(ciudades)}")
             for c in ciudades:
-                print(f"    - {c.city_id}: {c.city} (country_id: {c.country_id})")
+                print(f"    - {c[0]}: {c[1]} (País: {c[3]})")
             pausa()
             clear_screen()
         elif opcion == "5":
@@ -339,9 +339,9 @@ def submenu_fase2():
             print()
             limite = int(limite) if limite.isdigit() else 10
             ciudades = controlador.obtener_ciudades(limite)
-            print(f"  List<CityEntity>: {len(ciudades)} elementos")
+            print(f"  Ciudades recuperadas: {len(ciudades)}")
             for c in ciudades:
-                print(f"    - {c}")
+                print(f"    - {c[0]}: {c[1]} (País: {c[3]})")
             pausa()
             clear_screen()
         elif opcion == "5":
