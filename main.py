@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.fase1 import CrudService, ExportService, MetricsService
 from src.controllers import SakilaWorkflowController
-from src.utils.helpers import print_header, print_subheader, clear_screen
+from src.utils.helpers import print_header, print_subheader, clear_screen, pausa
 from src.dbcontext import DbContext
 
 
@@ -168,6 +168,8 @@ def submenu_fase1():
                 crud.crear_pais(nombre)
             else:
                 print("  Nombre no puede estar vacío.")
+            pausa()
+            clear_screen()
         elif opcion == "2":
             print_subheader("Leer Países")
             limite = input("  Cantidad a mostrar (default 10): ").strip()
@@ -177,6 +179,8 @@ def submenu_fase1():
             print(f"  Países recuperados: {len(paises)}")
             for p in paises:
                 print(f"    - {p.country_id}: {p.country}")
+            pausa()
+            clear_screen()
         elif opcion == "3":
             print_subheader("Crear Ciudad")
             nombre = input("  Ingrese nombre de la ciudad: ").strip()
@@ -187,6 +191,8 @@ def submenu_fase1():
                 crud.crear_ciudad(nombre, int(country_id))
             else:
                 print("  Datos inválidos.")
+            pausa()
+            clear_screen()
         elif opcion == "4":
             print_subheader("Leer Ciudades")
             limite = input("  Cantidad a mostrar (default 10): ").strip()
@@ -196,6 +202,8 @@ def submenu_fase1():
             print(f"  Ciudades recuperadas: {len(ciudades)}")
             for c in ciudades:
                 print(f"    - {c.city_id}: {c.city} (country_id: {c.country_id})")
+            pausa()
+            clear_screen()
         elif opcion == "5":
             print_subheader("Eliminar Ciudad")
             city_id = input("  Ingrese ID de la ciudad a eliminar: ").strip()
@@ -204,6 +212,8 @@ def submenu_fase1():
                 crud.eliminar_ciudad(int(city_id))
             else:
                 print("  ID inválido.")
+            pausa()
+            clear_screen()
         elif opcion == "6":
             print_subheader("Actualizar Tarifa de Película")
             film_id = input("  Ingrese ID de la película: ").strip()
@@ -214,6 +224,8 @@ def submenu_fase1():
                 crud.actualizar_tarifa_pelicula(int(film_id), float(nueva_tarifa))
             else:
                 print("  Datos inválidos.")
+            pausa()
+            clear_screen()
         elif opcion == "7":
             print_subheader("Buscar Película por ID")
             film_id = input("  Ingrese ID de la película: ").strip()
@@ -226,6 +238,8 @@ def submenu_fase1():
                     print("  Película no encontrada.")
             else:
                 print("  ID inválido.")
+            pausa()
+            clear_screen()
         elif opcion == "8":
             print_subheader("Exportar a CSV")
             tabla = input("  Nombre de la tabla (film, city, country, inventory): ").strip()
@@ -234,6 +248,8 @@ def submenu_fase1():
                 export.exportar_a_csv(tabla, f"data/{tabla}.csv")
             else:
                 print("  Nombre de tabla requerido.")
+            pausa()
+            clear_screen()
         elif opcion == "9":
             print_subheader("Exportar a JSON")
             tabla = input("  Nombre de la tabla (film, city, country, inventory): ").strip()
@@ -242,9 +258,13 @@ def submenu_fase1():
                 export.exportar_a_json(tabla, f"data/{tabla}.json")
             else:
                 print("  Nombre de tabla requerido.")
+            pausa()
+            clear_screen()
         elif opcion == "10":
             print_subheader("Métricas Descriptivas")
             metrics.calcular_metricas_descriptivas()
+            pausa()
+            clear_screen()
         else:
             print("Opción no válida.")
 
@@ -287,6 +307,8 @@ def submenu_fase2():
                 print(f"  País creado: {pais}")
             else:
                 print("  Nombre no puede estar vacío.")
+            pausa()
+            clear_screen()
         elif opcion == "2":
             print_subheader("Leer Países (List<CountryEntity>)")
             limite = input("  Cantidad a mostrar (default 10): ").strip()
@@ -296,6 +318,8 @@ def submenu_fase2():
             print(f"  List<CountryEntity>: {len(paises)} elementos")
             for p in paises:
                 print(f"    - {p}")
+            pausa()
+            clear_screen()
         elif opcion == "3":
             print_subheader("Crear Ciudad (Entity)")
             nombre = input("  Ingrese nombre de la ciudad: ").strip()
@@ -307,6 +331,8 @@ def submenu_fase2():
                 print(f"  Ciudad creada: {ciudad}")
             else:
                 print("  Datos inválidos.")
+            pausa()
+            clear_screen()
         elif opcion == "4":
             print_subheader("Leer Ciudades (List<CityEntity>)")
             limite = input("  Cantidad a mostrar (default 10): ").strip()
@@ -316,6 +342,8 @@ def submenu_fase2():
             print(f"  List<CityEntity>: {len(ciudades)} elementos")
             for c in ciudades:
                 print(f"    - {c}")
+            pausa()
+            clear_screen()
         elif opcion == "5":
             print_subheader("Buscar Película (Entity)")
             film_id = input("  Ingrese ID de la película: ").strip()
@@ -328,6 +356,8 @@ def submenu_fase2():
                     print("  Película no encontrada.")
             else:
                 print("  ID inválido.")
+            pausa()
+            clear_screen()
         elif opcion == "6":
             print_subheader("Leer Películas (List<FilmEntity>)")
             limite = input("  Cantidad a mostrar (default 10): ").strip()
@@ -337,6 +367,8 @@ def submenu_fase2():
             print(f"  List<FilmEntity>: {len(peliculas)} elementos")
             for p in peliculas:
                 print(f"    - {p}")
+            pausa()
+            clear_screen()
         elif opcion == "7":
             print_subheader("Actualizar Tarifa Película")
             film_id = input("  Ingrese ID de la película: ").strip()
@@ -350,6 +382,8 @@ def submenu_fase2():
                     print("  No se pudo actualizar.")
             else:
                 print("  Datos inválidos.")
+            pausa()
+            clear_screen()
         elif opcion == "8":
             print_subheader("Eliminar Ciudad por ID")
             city_id = input("  Ingrese ID de la ciudad: ").strip()
@@ -361,9 +395,13 @@ def submenu_fase2():
                     print("  No se pudo eliminar (posible FK constraint).")
             else:
                 print("  ID inválido.")
+            pausa()
+            clear_screen()
         elif opcion == "9":
             print_subheader("Ejecutar Flujo Completo ORM")
             controlador.procesar_flujo_completo()
+            pausa()
+            clear_screen()
         else:
             print("Opción no válida.")
 
