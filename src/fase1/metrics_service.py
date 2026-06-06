@@ -5,14 +5,21 @@
 
 import numpy as np
 import pandas as pd
-from src.dbcontext import DbContext
+from sqlalchemy import create_engine
+from src.config import Config
 
 
 class MetricsService:
     """Servicio para cálculo de métricas estadísticas descriptivas."""
 
     def __init__(self):
-        self.context = DbContext()
+        self.engine = create_engine(
+            f"mysql+mysqlconnector://{Config.USER}:{Config.PASSWORD}@{Config.HOST}:{Config.PORT}/{Config.DATABASE}"
+        )
+
+    def _get_connection(self):
+        """Obtiene conexión SQLAlchemy."""
+        return self.engine.connect()
 
     def calcular_metricas_descriptivas(self) -> dict:
         """
@@ -23,8 +30,8 @@ class MetricsService:
         Returns:
             Dict con métricas por variable
         """
-        df = pd.read_sql("SELECT length, replacement_cost FROM film", self.context._conectar())
-        self.context._conectar().close()
+        with self._get_connection() as conn:
+            df = pd.read_sql("SELECT length, replacement_cost FROM film", conn)
 
         resultados = {}
         variables = {
@@ -77,7 +84,7 @@ class MetricsService:
 
     def calcular_covarianza(self, var1: str, var2: str) -> float:
         """Calcula covarianza entre dos variables."""
-        df = pd.read_sql(f"SELECT {var1}, {var2} FROM film", self.context._conectar())
-        self.context._conectar().close()
+        with self._get_connection() as conn:
+            df = pd.read_sql(f"SELECT {var1}, {var2} FROM film", conn)
         matriz_cov = np.cov(df[var1], df[var2], ddof=1)
         return matriz_cov[0, 1]

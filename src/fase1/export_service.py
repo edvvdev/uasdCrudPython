@@ -6,14 +6,21 @@ import json
 from pathlib import Path
 from typing import Optional
 import pandas as pd
-from src.dbcontext import DbContext
+from sqlalchemy import create_engine
+from src.config import Config
 
 
 class ExportService:
     """Servicio para importación y exportación de datos en CSV y JSON."""
 
     def __init__(self):
-        self.context = DbContext()
+        self.engine = create_engine(
+            f"mysql+mysqlconnector://{Config.USER}:{Config.PASSWORD}@{Config.HOST}:{Config.PORT}/{Config.DATABASE}"
+        )
+
+    def _get_connection(self):
+        """Obtiene conexión SQLAlchemy."""
+        return self.engine.connect()
 
     def exportar_a_csv(self, nombre_tabla: str, ruta_destino: Optional[str] = None) -> str:
         """
@@ -29,7 +36,9 @@ class ExportService:
         if ruta_destino is None:
             ruta_destino = f"data/{nombre_tabla}.csv"
 
-        df = pd.read_sql(f"SELECT * FROM {nombre_tabla}", self.context._conectar())
+        with self._get_connection() as conn:
+            df = pd.read_sql(f"SELECT * FROM {nombre_tabla}", conn)
+
         df.to_csv(ruta_destino, index=False, encoding='utf-8')
         print(f"[EXPORT CSV] Tabla '{nombre_tabla}' -> {ruta_destino}")
         return ruta_destino
@@ -48,7 +57,8 @@ class ExportService:
         if ruta_destino is None:
             ruta_destino = f"data/{nombre_tabla}.json"
 
-        df = pd.read_sql(f"SELECT * FROM {nombre_tabla}", self.context._conectar())
+        with self._get_connection() as conn:
+            df = pd.read_sql(f"SELECT * FROM {nombre_tabla}", conn)
 
         for col in df.columns:
             if pd.api.types.is_datetime64_any_dtype(df[col]):
@@ -71,12 +81,11 @@ class ExportService:
 
         Returns:
             True si exitoso
- """
+        """
         try:
             df = pd.read_csv(ruta_archivo)
-            conn = self.context._conectar()
-            df.to_sql(nombre_tabla, conn, if_exists='append', index=False)
-            conn.close()
+            with self._get_connection() as conn:
+                df.to_sql(nombre_tabla, conn, if_exists='append', index=False)
             print(f"[IMPORT CSV] {ruta_archivo} -> tabla '{nombre_tabla}'")
             return True
         except Exception as e:
@@ -98,9 +107,8 @@ class ExportService:
             with open(ruta_archivo, 'r', encoding='utf-8') as archivo:
                 datos = json.load(archivo)
             df = pd.DataFrame(datos)
-            conn = self.context._conectar()
-            df.to_sql(nombre_tabla, conn, if_exists='append', index=False)
-            conn.close()
+            with self._get_connection() as conn:
+                df.to_sql(nombre_tabla, conn, if_exists='append', index=False)
             print(f"[IMPORT JSON] {ruta_archivo} -> tabla '{nombre_tabla}'")
             return True
         except Exception as e:
