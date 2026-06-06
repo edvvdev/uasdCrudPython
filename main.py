@@ -13,6 +13,109 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.fase1 import CrudService, ExportService, MetricsService
 from src.controllers import SakilaWorkflowController
 from src.utils.helpers import print_header, print_subheader
+from src.dbcontext import DbContext
+
+
+QUERIES = [
+    ("Películas con costo de reemplazo > $15.00", """
+SELECT title, release_year, replacement_cost, rating
+FROM film WHERE replacement_cost > 15.00;
+"""),
+    ("Join ciudades con países", """
+SELECT ci.city_id, ci.city, co.country
+FROM city ci INNER JOIN country co ON ci.country_id = co.country_id;
+"""),
+    ("Ciudades por país (conteo)", """
+SELECT co.country, COUNT(ci.city_id) AS total_ciudades
+FROM country co LEFT JOIN city ci ON co.country_id = co.country_id
+GROUP BY co.country_id ORDER BY total_ciudades DESC;
+"""),
+    ("Duración promedio por clasificación", """
+SELECT rating, ROUND(AVG(length), 2) AS duracion_promedio
+FROM film GROUP BY rating;
+"""),
+    ("Búsqueda por patrón en títulos", """
+SELECT film_id, title, rental_rate, rating
+FROM film WHERE title LIKE '%Matrix%' OR title LIKE '%Inception%';
+"""),
+    ("Inventario activo por tienda", """
+SELECT i.inventory_id, f.title, i.store_id
+FROM inventory i JOIN film f ON i.film_id = f.film_id WHERE i.store_id = 1;
+"""),
+    ("Películas con tarifa 3-6 y duración > 120", """
+SELECT title, rental_rate, length FROM film
+WHERE rental_rate BETWEEN 3.00 AND 6.00 AND length > 120;
+"""),
+    ("Conteo de copias por título", """
+SELECT f.title, COUNT(i.inventory_id) AS copias_disponibles
+FROM film f LEFT JOIN inventory i ON f.film_id = i.film_id GROUP BY f.film_id;
+"""),
+    ("Países sin ciudades asociadas", """
+SELECT co.country FROM country co
+LEFT JOIN city ci ON co.country_id = ci.country_id WHERE ci.city_id IS NULL;
+"""),
+    ("Máximo costo operativo", """
+SELECT title, replacement_cost FROM film
+WHERE replacement_cost = (SELECT MAX(replacement_cost) FROM film);
+"""),
+]
+
+
+def ejecutar_consulta_individual(numero):
+    """Ejecuta una consulta individual y muestra el resultado."""
+    if numero < 1 or numero > len(QUERIES):
+        print("Número de consulta inválido.")
+        return
+
+    descripcion, query = QUERIES[numero - 1]
+    print_subheader(f"Consulta {numero}: {descripcion}")
+    print(f"\nSQL:\n{query.strip()}\n")
+
+    context = DbContext()
+    resultados = context.ejecutar_consulta(query.strip())
+
+    if resultados:
+        print("RESULTADO:")
+        for fila in resultados:
+            print(f"  {fila}")
+    else:
+        print("Sin resultados.")
+
+
+def ejecutar_queries():
+    """Submenú para ejecutar consultas SQL individualmente."""
+    while True:
+        print_header("CONSULTAS SQL - SUBMENÚ DE 10 QUERIES")
+        print()
+        for i, (descripcion, _) in enumerate(QUERIES, 1):
+            print(f"  {i}. {descripcion}")
+        print()
+        print("  A. Ejecutar TODAS las consultas")
+        print("  0. Volver al menú principal")
+        print()
+
+        opcion = input("Seleccione una consulta (1-10) o 'A'/'0': ").strip()
+
+        if opcion == "0":
+            break
+        elif opcion.upper() == "A":
+            print_header("EJECUTANDO TODAS LAS CONSULTAS")
+            context = DbContext()
+            for i, (descripcion, query) in enumerate(QUERIES, 1):
+                print_subheader(f"Consulta {i}: {descripcion}")
+                resultados = context.ejecutar_consulta(query.strip())
+                if resultados:
+                    for fila in resultados:
+                        print(f"  {fila}")
+                else:
+                    print("  Sin resultados.")
+                print()
+        else:
+            try:
+                num = int(opcion)
+                ejecutar_consulta_individual(num)
+            except ValueError:
+                print("Opción no válida.")
 
 
 def ejecutar_fase1():
@@ -48,59 +151,6 @@ def ejecutar_fase2():
     controlador = SakilaWorkflowController()
     controlador.procesar_flujo_completo()
     print("[FASE II] Completada exitosamente")
-
-
-def ejecutar_queries():
-    """Ejecuta las10 consultas SQL (mostrar query y resultado)."""
-    print_header("CONSULTAS SQL -10 QUERIES ANALÍTICAS")
-
-    queries = [
-        ("Películas con costo de reemplazo > $15.00", """
-SELECT title, release_year, replacement_cost, rating
-FROM film WHERE replacement_cost > 15.00;
-"""),
-        ("Join ciudades con países", """
-SELECT ci.city_id, ci.city, co.country
-FROM city ci INNER JOIN country co ON ci.country_id = co.country_id;
-"""),
-        ("Ciudades por país (conteo)", """
-SELECT co.country, COUNT(ci.city_id) AS total_ciudades
-FROM country co LEFT JOIN city ci ON co.country_id = ci.country_id
-GROUP BY co.country_id ORDER BY total_ciudades DESC;
-"""),
-        ("Duración promedio por clasificación", """
-SELECT rating, ROUND(AVG(length), 2) AS duracion_promedio
-FROM film GROUP BY rating;
-"""),
-        ("Búsqueda por patrón en títulos", """
-SELECT film_id, title, rental_rate, rating
-FROM film WHERE title LIKE '%Matrix%' OR title LIKE '%Inception%';
-"""),
-        ("Inventario activo por tienda", """
-SELECT i.inventory_id, f.title, i.store_id
-FROM inventory i JOIN film f ON i.film_id = f.film_id WHERE i.store_id = 1;
-"""),
-        ("Películas con tarifa 3-6 y duración > 120", """
-SELECT title, rental_rate, length FROM film
-WHERE rental_rate BETWEEN 3.00 AND 6.00 AND length > 120;
-"""),
-        ("Conteo de copias por título", """
-SELECT f.title, COUNT(i.inventory_id) AS copias_disponibles
-FROM film f LEFT JOIN inventory i ON f.film_id = i.film_id GROUP BY f.film_id;
-"""),
-        ("Países sin ciudades asociadas", """
-SELECT co.country FROM country co
-LEFT JOIN city ci ON co.country_id = ci.country_id WHERE ci.city_id IS NULL;
-"""),
-        ("Máximo costo operativo", """
-SELECT title, replacement_cost FROM film
-WHERE replacement_cost = (SELECT MAX(replacement_cost) FROM film);
-"""),
-    ]
-
-    for i, (descripcion, query) in enumerate(queries, 1):
-        print(f"\n--- Consulta {i}: {descripcion} ---")
-        print(query.strip())
 
 
 def mostrar_menu_interactivo():
