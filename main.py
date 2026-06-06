@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.fase1 import CrudService, ExportService, MetricsService
 from src.controllers import SakilaWorkflowController
-from src.utils.helpers import print_header, print_subheader
+from src.utils.helpers import print_header, print_subheader, clear_screen
 from src.dbcontext import DbContext
 
 
@@ -93,6 +93,7 @@ def ejecutar_consulta_individual(numero):
 
 def ejecutar_queries():
     """Submenú para ejecutar consultas SQL individualmente."""
+    clear_screen()
     while True:
         print_header("CONSULTAS SQL - SUBMENÚ DE 10 QUERIES")
         print()
@@ -133,6 +134,7 @@ def ejecutar_queries():
 
 def submenu_fase1():
     """Submenú interactivo para operaciones de Fase I."""
+    clear_screen()
     crud = CrudService()
     export = ExportService()
     metrics = MetricsService()
@@ -253,6 +255,7 @@ def submenu_fase1():
 
 def submenu_fase2():
     """Submenú interactivo para operaciones de Fase II ORM."""
+    clear_screen()
     controlador = SakilaWorkflowController()
 
     while True:
@@ -367,6 +370,7 @@ def submenu_fase2():
 
 def mostrar_menu_interactivo():
     """Muestra el menú interactivo y procesa la selección del usuario."""
+    clear_screen()
     while True:
         print_header("MENÚ PRINCIPAL - uasdCrudPython")
         print("  Maestría en Ciencia de Datos e Inteligencia Artificial")
