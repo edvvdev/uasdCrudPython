@@ -499,8 +499,15 @@ El enfoque artesanal permite comprender los fundamentos internos de cómo operan
 uasdCrudPython/
 ├── requirements.txt       # Dependencias Python
 ├── src/
+│   ├── dbcontext.py       # DbContext (gestor de conexiones)
 │   ├── fase1_main.py      # Fase I: CRUD + Import/Export + Métricas
-│   └── fase2_orm.py       # Fase II: ORM completo (DbContext, Entity, Model, Controller)
+│   ├── fase2_orm.py       # Fase II: Punto de entrada ORM
+│   ├── entities/
+│   │   └── __init__.py    # CountryEntity, CityEntity, FilmEntity
+│   ├── models/
+│   │   └── data_repository.py  # List<Entity>
+│   └── controllers/
+│       └── sakila_controller.py # SakilaWorkflowController
 ├── sql/
 │   ├── 00_init.sql        # CREATE DATABASE sakila
 │   ├── run_all.sql        # Script maestro

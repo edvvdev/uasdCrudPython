@@ -23,8 +23,15 @@
 uasdCrudPython/
 ├── requirements.txt       # Dependencias Python
 ├── src/
+│   ├── dbcontext.py       # Gestor de conexiones
 │   ├── fase1_main.py      # CRUD + Import/Export + Métricas
-│   └── fase2_orm.py       # ORM POO (DbContext, Entity, Model, Controller)
+│   ├── fase2_orm.py       # Punto de entrada ORM
+│   ├── entities/
+│   │   └── __init__.py    # CountryEntity, CityEntity, FilmEntity
+│   ├── models/
+│   │   └── data_repository.py  # List<Entity>
+│   └── controllers/
+│       └── sakila_controller.py  # Flujo de negocio
 ├── sql/
 │   ├── 00_init.sql        # CREATE DATABASE
 │   ├── run_all.sql        # Script maestro

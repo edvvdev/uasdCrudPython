@@ -11,12 +11,21 @@ uasdCrudPython/
 ├── .gitignore
 ├── README.md
 ├── src/
+│   ├── __init__.py
+│   ├── dbcontext.py       # Gestor de conexiones y transacciones
 │   ├── fase1_main.py      # Fase I: CRUD + Import/Export + Métricas
-│   └── fase2_orm.py       # Fase II: ORM (DbContext, Entity, Model, Controller)
+│   ├── fase2_orm.py       # Fase II: Punto de entrada ORM
+│   ├── entities/
+│   │   ├── __init__.py    # CountryEntity, CityEntity, FilmEntity, InventoryEntity
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── data_repository.py  # List<Entity> y operaciones de negocio
+│   └── controllers/
+│       ├── __init__.py
+│       └── sakila_controller.py  # Orquestador de flujo de negocio
 ├── sql/
-│   ├── README.md          # Documentación SQL
-│   ├── 00_init.sql         # CREATE DATABASE
-│   ├── run_all.sql         # Script maestro
+│   ├── 00_init.sql        # CREATE DATABASE
+│   ├── run_all.sql        # Script maestro
 │   ├── ddl/
 │   │   └── 01_ddl.sql     # CREATE TABLE + Constraints
 │   ├── dml/
@@ -30,37 +39,60 @@ uasdCrudPython/
 └── data/                  # Exports CSV/JSON
 ```
 
+## Arquitectura ORM Modular
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    SakilaWorkflowController                │
+│              (Orquesta flujo de negocio)                  │
+├─────────────────────────────────────────────────────────────┤
+│                     DataRepository                         │
+│              (List<Entity> - Abstracción) │
+├─────────────────────────────────────────────────────────────┤
+│                      DbContext                             │
+│         (Gestión de conexiones y transacciones)            │
+├─────────────────────────────────────────────────────────────┤
+│ mysql-connector-python                   │
+│                    (Driver nativo) │
+├─────────────────────────────────────────────────────────────┤
+│ MariaDB                              │
+│ (Sakila)                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ## Quick Start
 
 ```bash
 # 1. Instalar dependencias
 pip install -r requirements.txt
 
-# 2. Importar base de datos (script maestro)
+# 2. Importar base de datos
 mysql -u root < sql/run_all.sql
 
 # 3. Ejecutar Fase I
 python src/fase1_main.py
 
-# 4. Ejecutar Fase II
+# 4. Ejecutar Fase II (ORM Modular)
 python src/fase2_orm.py
 ```
+
+## Componentes ORM
+
+| Componente | Archivo | Descripción |
+|------------|---------|-------------|
+| **DbContext** | `src/dbcontext.py` | Gestiona ciclo de vida de conexiones y transacciones |
+| **Entities** | `src/entities/__init__.py` | CountryEntity, CityEntity, FilmEntity, InventoryEntity |
+| **Models** | `src/models/data_repository.py` | List<Entity> e hidratación de datos |
+| **Controllers** | `src/controllers/sakila_controller.py` | Orquesta flujo de negocio |
 
 ## Documentación
 
 | Documento | Descripción |
 |-----------|-------------|
-| [docs/README.md](docs/README.md) | Guía de uso, API reference, configuración |
-| [docs/DESIGN.md](docs/DESIGN.md) | Arquitectura, decisiones técnicas, limitaciones |
-| [docs/ensayo.md](docs/ensayo.md) | Ensayo académico con todos los criterios de evaluación |
-| [sql/README.md](sql/README.md) | Documentación de scripts SQL |
-
-## Tecnologías
-
-- **Python 3.8+** - Lenguaje principal
-- **MariaDB** - Sistema de gestión de base de datos
-- **mysql-connector-python** - Conector nativo MySQL
-- **pandas/numpy** - Análisis de datos y métricas
+| [docs/README.md](docs/README.md) | Guía de uso completa |
+| [docs/DESIGN.md](docs/DESIGN.md) | Arquitectura y decisiones técnicas |
+| [docs/ensayo.md](docs/ensayo.md) | Ensayo académico |
+| [sql/README.md](sql/README.md) | Documentación SQL |
 
 ## Repositorio
 
