@@ -11,7 +11,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.fase1 import CrudService, ExportService, MetricsService
-from src.fase2.controllers import SakilaWorkflowController
+from src.controllers import SakilaWorkflowController
 from src.utils.helpers import print_header, print_subheader
 
 

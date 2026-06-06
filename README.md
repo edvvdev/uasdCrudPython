@@ -17,7 +17,6 @@ uasdCrudPython/
 ├── src/
 │   ├── __init__.py
 │   ├── config.py           # Configuración centralizada
-│   ├── main.py            # Orchestrator (ejecutado via main.py)
 │   ├── dbcontext.py       # Gestor de conexiones
 │   ├── fase1/
 │   │   ├── __init__.py
@@ -68,49 +67,30 @@ pip install -e .
 
 ## Uso
 
-### Instalación como paquete (recomendado)
-
-```bash
-pip install -e .
-```
-
 ### Ejecución
 
 ```bash
 # Menú interactivo
-python src/main.py
+python main.py
 
-# O directofrom src.main import main
-main()
-```
-
-### CLI Flags
-
-```bash
-# Ejecutar Fase I (CRUD + Import/Export + Métricas)
-python src/main.py --fase1
-
-# Ejecutar Fase II (Arquitectura ORM)
-python src/main.py --fase2
-
-# Mostrar las 10 consultas SQL
-python src/main.py --queries
-
-# Ejecutar todas las fases
-python src/main.py --all
+# CLI flags
+python main.py --fase1      # Ejecutar Fase I
+python main.py --fase2      # Ejecutar Fase II
+python main.py --queries    # Mostrar consultas SQL
+python main.py --all        # Ejecutar todas las fases
 ```
 
 ### Menú Interactivo
 
-```bash
-$ python src/main.py
+```
+$ python main.py
 
 ============================================
         MENÚ PRINCIPAL - uasdCrudPython
   Maestría en Ciencia de Datos
 ============================================
 
-1. FASE I: CRUD + Import/Export + Métricas
+  1. FASE I: CRUD + Import/Export + Métricas
   2. FASE II: Arquitectura ORM
   3. CONSULTAS SQL (10 queries)
   4. DOCUMENTACIÓN
@@ -138,7 +118,7 @@ Ver [docs/criterios.md](docs/criterios.md) para mapeo completo.
 # Importar estructura y datos
 mysql -u root < sql/run_all.sql
 
-# O ejecutar scripts individually
+# O ejecutar scripts individualmente
 mysql -u root < sql/00_init.sql
 mysql -u root < sql/ddl/01_ddl.sql
 mysql -u root < sql/dml/02_dml.sql
