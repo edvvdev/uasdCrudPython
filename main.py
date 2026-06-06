@@ -128,25 +128,28 @@ def ejecutar_queries():
 
 
 # =====================================================================
-# SUBMENÚ FASE I
+# SUBMENÚ FASE I - INTERACTIVO
 # =====================================================================
 
 def submenu_fase1():
-    """Submenú para operaciones de Fase I."""
+    """Submenú interactivo para operaciones de Fase I."""
     crud = CrudService()
     export = ExportService()
     metrics = MetricsService()
 
     while True:
-        print_header("FASE I - SUBMENÚ")
+        print_header("FASE I - SUBMENÚ CRUD INTERACTIVO")
         print()
-        print("  1. CRUD Countries (Create, Read)")
-        print("  2. CRUD Cities (Create, Read, Delete)")
-        print("  3. CRUD Films (Update)")
-        print("  4. Exportar a CSV")
-        print("  5. Exportar a JSON")
-        print("  6. Métricas Descriptivas")
-        print("  A. Ejecutar TODO (completo)")
+        print(" 1. Crear País")
+        print("  2. Leer Países")
+        print("  3. Crear Ciudad")
+        print("  4. Leer Ciudades")
+        print("  5. Eliminar Ciudad")
+        print("  6. Actualizar Tarifa Película")
+        print("  7. Buscar Película por ID")
+        print("  8. Exportar a CSV")
+        print("  9. Exportar a JSON")
+        print("  10. Métricas Descriptivas")
         print("  0. Volver al menú principal")
         print()
 
@@ -155,58 +158,103 @@ def submenu_fase1():
         if opcion == "0":
             break
         elif opcion == "1":
-            print_subheader("CRUD Countries")
-            crud.crear_pais("Argentina")
-            paises = crud.leer_paises(5)
-            print(f"Países recuperados: {len(paises)}")
+            print_subheader("Crear País")
+            nombre = input("  Ingrese nombre del país: ").strip()
+            if nombre:
+                crud.crear_pais(nombre)
+            else:
+                print("  Nombre no puede estar vacío.")
         elif opcion == "2":
-            print_subheader("CRUD Cities")
-            crud.crear_ciudad("Buenos Aires", 10)
-            ciudades = crud.leer_ciudades(5)
-            print(f"Ciudades recuperadas: {len(ciudades)}")
+            print_subheader("Leer Países")
+            limite = input("  Cantidad a mostrar (default10): ").strip()
+            limite = int(limite) if limite.isdigit() else 10
+            paises = crud.leer_paises(limite)
+            print(f"  Países recuperados: {len(paises)}")
+            for p in paises:
+                print(f"    - {p.country_id}: {p.country}")
         elif opcion == "3":
-            print_subheader("CRUD Films - Actualizar tarifa")
-            crud.actualizar_tarifa_pelicula(1, 5.99)
-            pelicula = crud.buscar_pelicula_por_id(1)
-            print(f"Película: {pelicula}")
+            print_subheader("Crear Ciudad")
+            nombre = input("  Ingrese nombre de la ciudad: ").strip()
+            country_id = input("  Ingrese ID del país: ").strip()
+            if nombre and country_id.isdigit():
+                crud.crear_ciudad(nombre, int(country_id))
+            else:
+                print("  Datos inválidos.")
         elif opcion == "4":
-            print_subheader("Exportar a CSV")
-            export.exportar_a_csv("film", "data/peliculas.csv")
+            print_subheader("Leer Ciudades")
+            limite = input("  Cantidad a mostrar (default 10): ").strip()
+            limite = int(limite) if limite.isdigit() else 10
+            ciudades = crud.leer_ciudades(limite)
+            print(f"  Ciudades recuperadas: {len(ciudades)}")
+            for c in ciudades:
+                print(f"    - {c.city_id}: {c.city} (country_id: {c.country_id})")
         elif opcion == "5":
-            print_subheader("Exportar a JSON")
-            export.exportar_a_json("city", "data/ciudades.json")
+            print_subheader("Eliminar Ciudad")
+            city_id = input("  Ingrese ID de la ciudad a eliminar: ").strip()
+            if city_id.isdigit():
+                crud.eliminar_ciudad(int(city_id))
+            else:
+                print("  ID inválido.")
         elif opcion == "6":
+            print_subheader("Actualizar Tarifa de Película")
+            film_id = input("  Ingrese ID de la película: ").strip()
+            nueva_tarifa = input("  Nueva tarifa: ").strip()
+            if film_id.isdigit() and nueva_tarifa.replace('.', '').isdigit():
+                crud.actualizar_tarifa_pelicula(int(film_id), float(nueva_tarifa))
+            else:
+                print("  Datos inválidos.")
+        elif opcion == "7":
+            print_subheader("Buscar Película por ID")
+            film_id = input("  Ingrese ID de la película: ").strip()
+            if film_id.isdigit():
+                pelicula = crud.buscar_pelicula_por_id(int(film_id))
+                if pelicula:
+                    print(f"  {pelicula}")
+                else:
+                    print("  Película no encontrada.")
+            else:
+                print("  ID inválido.")
+        elif opcion == "8":
+            print_subheader("Exportar a CSV")
+            tabla = input("  Nombre de la tabla (film, city, country, inventory): ").strip()
+            if tabla:
+                export.exportar_a_csv(tabla, f"data/{tabla}.csv")
+            else:
+                print("  Nombre de tabla requerido.")
+        elif opcion == "9":
+            print_subheader("Exportar a JSON")
+            tabla = input("  Nombre de la tabla (film, city, country, inventory): ").strip()
+            if tabla:
+                export.exportar_a_json(tabla, f"data/{tabla}.json")
+            else:
+                print("  Nombre de tabla requerido.")
+        elif opcion == "10":
             print_subheader("Métricas Descriptivas")
             metrics.calcular_metricas_descriptivas()
-        elif opcion.upper() == "A":
-            print_subheader("Ejecutando FASE I completa")
-            crud.crear_pais("Uruguay")
-            paises = crud.leer_paises(3)
-            print(f"Países: {len(paises)}")
-            export.exportar_a_csv("film", "data/peliculas.csv")
-            export.exportar_a_json("city", "data/ciudades.json")
-            metrics.calcular_metricas_descriptivas()
-            print("[FASE I] Completada exitosamente")
         else:
             print("Opción no válida.")
 
 
 # =====================================================================
-# SUBMENÚ FASE II
+# SUBMENÚ FASE II - INTERACTIVO
 # =====================================================================
 
 def submenu_fase2():
-    """Submenú para operaciones de Fase II."""
+    """Submenú interactivo para operaciones de Fase II ORM."""
     controlador = SakilaWorkflowController()
 
     while True:
-        print_header("FASE II - SUBMENÚ ORM")
+        print_header("FASE II - SUBMENÚ ORM INTERACTIVO")
         print()
-        print("  1. Gestionar Countries (Entity)")
-        print("  2. Gestionar Cities (Entity)")
-        print("  3. Gestionar Films (Entity)")
-        print("  4. Ver List<Entity>")
-        print("  5. Ejecutar flujo completo ORM")
+        print("  1. Crear País (Entity)")
+        print("  2. Leer Países (List<CountryEntity>)")
+        print("  3. Crear Ciudad (Entity)")
+        print("  4. Leer Ciudades (List<CityEntity>)")
+        print("  5. Buscar Película (Entity)")
+        print("  6. Leer Películas (List<FilmEntity>)")
+        print("  7. Actualizar Tarifa Película")
+        print("  8. Eliminar Ciudad por ID")
+        print("  9. Ejecutar Flujo Completo ORM")
         print("  0. Volver al menú principal")
         print()
 
@@ -215,34 +263,80 @@ def submenu_fase2():
         if opcion == "0":
             break
         elif opcion == "1":
-            print_subheader("Gestionar Country Entity")
-            pais = controlador.crear_pais("Chile")
-            print(f"País creado: {pais}")
-            paises = controlador.obtener_paises(3)
-            print(f"Países en sistema: {len(paises)}")
+            print_subheader("Crear País (Entity)")
+            nombre = input("  Ingrese nombre del país: ").strip()
+            if nombre:
+                pais = controlador.crear_pais(nombre)
+                print(f"  País creado: {pais}")
+            else:
+                print("  Nombre no puede estar vacío.")
         elif opcion == "2":
-            print_subheader("Gestionar City Entity")
-            ciudad = controlador.crear_ciudad("Santiago", 1)
-            print(f"Ciudad creada: {ciudad}")
-        elif opcion == "3":
-            print_subheader("Gestionar Film Entity")
-            pelicula = controlador.obtener_pelicula(1)
-            print(f"Película recuperada: {pelicula}")
-            if pelicula:
-                controlador.actualizar_tarifa(1, 6.99)
-                print("Tarifa actualizada")
-        elif opcion == "4":
-            print_subheader("Ver List<Entity>")
-            paises = controlador.obtener_paises(5)
-            print(f"List<CountryEntity>: {len(paises)} elementos")
+            print_subheader("Leer Países (List<CountryEntity>)")
+            limite = input("  Cantidad a mostrar (default 10): ").strip()
+            limite = int(limite) if limite.isdigit() else 10
+            paises = controlador.obtener_paises(limite)
+            print(f"  List<CountryEntity>: {len(paises)} elementos")
             for p in paises:
-                print(f"  {p}")
-            peliculas = controlador.obtener_peliculas(3)
-            print(f"List<FilmEntity>: {len(peliculas)} elementos")
-            for p in peliculas:
-                print(f"  {p}")
+                print(f"    - {p}")
+        elif opcion == "3":
+            print_subheader("Crear Ciudad (Entity)")
+            nombre = input("  Ingrese nombre de la ciudad: ").strip()
+            country_id = input("  Ingrese ID del país: ").strip()
+            if nombre and country_id.isdigit():
+                ciudad = controlador.crear_ciudad(nombre, int(country_id))
+                print(f"  Ciudad creada: {ciudad}")
+            else:
+                print("  Datos inválidos.")
+        elif opcion == "4":
+            print_subheader("Leer Ciudades (List<CityEntity>)")
+            limite = input("  Cantidad a mostrar (default 10): ").strip()
+            limite = int(limite) if limite.isdigit() else 10
+            ciudades = controlador.obtener_ciudades(limite)
+            print(f"  List<CityEntity>: {len(ciudades)} elementos")
+            for c in ciudades:
+                print(f"    - {c}")
         elif opcion == "5":
-            print_subheader("Flujo Completo ORM")
+            print_subheader("Buscar Película (Entity)")
+            film_id = input("  Ingrese ID de la película: ").strip()
+            if film_id.isdigit():
+                pelicula = controlador.obtener_pelicula(int(film_id))
+                if pelicula:
+                    print(f"  {pelicula}")
+                else:
+                    print("  Película no encontrada.")
+            else:
+                print("  ID inválido.")
+        elif opcion == "6":
+            print_subheader("Leer Películas (List<FilmEntity>)")
+            limite = input("  Cantidad a mostrar (default 10): ").strip()
+            limite = int(limite) if limite.isdigit() else 10
+            peliculas = controlador.obtener_peliculas(limite)
+            print(f"  List<FilmEntity>: {len(peliculas)} elementos")
+            for p in peliculas:
+                print(f"    - {p}")
+        elif opcion == "7":
+            print_subheader("Actualizar Tarifa Película")
+            film_id = input("  Ingrese ID de la película: ").strip()
+            nueva_tarifa = input("  Nueva tarifa: ").strip()
+            if film_id.isdigit() and nueva_tarifa.replace('.', '').isdigit():
+                if controlador.actualizar_tarifa(int(film_id), float(nueva_tarifa)):
+                    print("  Tarifa actualizada exitosamente.")
+                else:
+                    print("  No se pudo actualizar.")
+            else:
+                print("  Datos inválidos.")
+        elif opcion == "8":
+            print_subheader("Eliminar Ciudad por ID")
+            city_id = input("  Ingrese ID de la ciudad: ").strip()
+            if city_id.isdigit():
+                if controlador.eliminar_ciudad(int(city_id)):
+                    print("  Ciudad eliminada.")
+                else:
+                    print("  No se pudo eliminar (posible FK constraint).")
+            else:
+                print("  ID inválido.")
+        elif opcion == "9":
+            print_subheader("Ejecutar Flujo Completo ORM")
             controlador.procesar_flujo_completo()
         else:
             print("Opción no válida.")
@@ -255,7 +349,7 @@ def mostrar_menu_interactivo():
         print("  Maestría en Ciencia de Datos e Inteligencia Artificial")
         print()
         print(" 1. FASE I: CRUD + Import/Export + Métricas")
-        print("  2. FASE II: Arquitectura ORM")
+        print("2. FASE II: Arquitectura ORM")
         print("  3. CONSULTAS SQL (10 queries)")
         print("  4. DOCUMENTACIÓN")
         print("  0. Salir")
