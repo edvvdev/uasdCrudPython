@@ -500,13 +500,16 @@ uasdCrudPython/
 ├── requirements.txt       # Dependencias Python
 ├── src/
 │   ├── fase1_main.py      # Fase I: CRUD + Import/Export + Métricas
-│   └── fase2_orm.py        # Fase II: ORM completo (DbContext, Entity, Model, Controller)
+│   └── fase2_orm.py       # Fase II: ORM completo (DbContext, Entity, Model, Controller)
 ├── sql/
 │   ├── 00_init.sql        # CREATE DATABASE sakila
-│   ├── 01_ddl.sql         # CREATE TABLE + Constraints
-│   ├── 02_dml.sql         # INSERT datos de prueba
-│   ├── 03_queries.sql     # 10 consultas analíticas
-│   └── run_all.sql        # Script maestro
+│   ├── run_all.sql        # Script maestro
+│   ├── ddl/
+│   │   └── 01_ddl.sql     # CREATE TABLE + Constraints
+│   ├── dml/
+│   │   └── 02_dml.sql     # INSERT datos de prueba
+│   └── queries/
+│       └── 03_queries.sql # 10 consultas analíticas
 ├── docs/
 │   ├── README.md          # Documentación de uso
 │   ├── DESIGN.md          # Diseño técnico

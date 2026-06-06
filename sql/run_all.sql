@@ -4,21 +4,12 @@
 -- =====================================================================
 
 -- Ejecutar en orden:
--- 1. 00_init.sql   (Crear base de datos)
--- 2. 01_ddl.sql    (Crear tablas)
--- 3. 02_dml.sql    (Insertar datos)
--- 4. 03_queries.sql (Consultas de prueba)
-
--- Para ejecutar todos juntos desde consola:
--- mysql -u root < sql/run_all.sql
-
--- O individualmente:
--- mysql -u root < sql/00_init.sql
--- mysql -u root < sql/01_ddl.sql
--- mysql -u root < sql/02_dml.sql
--- mysql -u root < sql/03_queries.sql
+-- 1.00_init.sql   (Crear base de datos)
+-- 2. ddl/01_ddl.sql (Crear tablas)
+-- 3. dml/02_dml.sql    (Insertar datos)
+-- 4. queries/03_queries.sql (Consultas de prueba)
 
 SOURCE sql/00_init.sql;
-SOURCE sql/01_ddl.sql;
-SOURCE sql/02_dml.sql;
-SOURCE sql/03_queries.sql;
+SOURCE sql/ddl/01_ddl.sql;
+SOURCE sql/dml/02_dml.sql;
+SOURCE sql/queries/03_queries.sql;

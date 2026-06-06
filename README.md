@@ -15,11 +15,14 @@ uasdCrudPython/
 │   └── fase2_orm.py       # Fase II: ORM (DbContext, Entity, Model, Controller)
 ├── sql/
 │   ├── README.md          # Documentación SQL
-│   ├── 00_init.sql        # CREATE DATABASE
-│   ├── 01_ddl.sql         # CREATE TABLE + Constraints
-│   ├── 02_dml.sql         # INSERT datos
-│   ├── 03_queries.sql     # 10 consultas analíticas
-│   └── run_all.sql        # Script maestro
+│   ├── 00_init.sql         # CREATE DATABASE
+│   ├── run_all.sql         # Script maestro
+│   ├── ddl/
+│   │   └── 01_ddl.sql     # CREATE TABLE + Constraints
+│   ├── dml/
+│   │   └── 02_dml.sql     # INSERT datos
+│   └── queries/
+│       └── 03_queries.sql # 10 consultas analíticas
 ├── docs/
 │   ├── README.md          # Guía de uso
 │   ├── DESIGN.md          # Diseño técnico
