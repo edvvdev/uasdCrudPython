@@ -3,6 +3,15 @@
 # =====================================================================
 # Punto de entrada unificado para el proyecto uasdCrudPython.
 # Soporta ejecución via CLI flags o menú interactivo.
+#
+# MAESTRANTES:
+#   - Framiel Trinidad
+#   - Edwing Perez
+#   - Jharol Duran
+#
+# Universidad Autónoma de Santo Domingo (UASD)
+# INF-8237-C2: Ciencias de Datos 1
+# Profesora: Silveria del Orbe Abad
 
 import argparse
 import sys
